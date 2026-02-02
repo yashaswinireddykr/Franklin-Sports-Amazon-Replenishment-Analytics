@@ -73,3 +73,4 @@ def simulate_inventory_po(
         "weeks_of_cover": round(weeks_of_cover, 1),
         "stockout_risk": round(stockout_risk * 100, 1),
     }
+
