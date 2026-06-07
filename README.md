@@ -45,25 +45,25 @@ Five datasets were cleaned, validated, and merged at the ASIN–week level, cove
 
 ### Objective 1 — Reorder Trigger (Weeks of Cover)
 
-Amazon reorders consistently when Weeks of Cover (WoC) falls between **4–8 weeks**, with peak probability at **≈ 6 WoC**. Nearly half of all Amazon purchase orders for Franklin products fall within this range, indicating a clear and consistent reorder trigger.
+Amazon reorders consistently when Weeks of Cover (WoC) falls between **4–8 weeks**, with peak probability at **≈ 6 WoC**. Nearly half of all Amazon purchase orders for Franklin products fall within this range, indicating a clear and consistent reorder trigger. This aligns naturally with Franklin's ≈ 3-week inbound lead time, leaving a meaningful production buffer.
 
 ![WoC vs PO Probability](Analysis_Visuals/WoC_vs_PO_Probability.png)
 
-The finding holds consistently across training and validation periods — confirming it reflects a structural ordering rule, not a data artifact.
+Model precision was validated using a Precision–Recall–F1 sweep across WoC thresholds, confirming the trigger's predictive value:
+
+![Precision Recall F1](Analysis_Visuals/Precision_Recall_F1.png)
+
+The finding holds consistently across both training and validation periods — confirming it reflects a structural ordering rule, not a data artifact:
 
 <p align="center">
   <img src="Analysis_Visuals/WoC_Training.png" width="48%"/>
   <img src="Analysis_Visuals/WoC_Validation.png" width="48%"/>
 </p>
 
-Model precision was validated using a Precision–Recall–F1 sweep across WoC thresholds, confirming the trigger's predictive value:
-
-![Precision Recall F1](Analysis_Visuals/Precision_Recall_F1.png)
-
 **What this means for Franklin:**
-- Amazon maintains a forward inventory buffer — when coverage approaches ~6 weeks, reordering becomes highly likely
-- This aligns naturally with Franklin's ~3-week inbound lead time, leaving a meaningful production buffer
-- The decision rule remains consistent: Amazon reorders when WoC is within 4–8 weeks
+- Amazon maintains a forward inventory buffer — when WoC approaches ~6 weeks, reordering becomes highly likely
+- The decision rule is consistent: Amazon reorders when WoC is within 4–8 weeks
+- The peak shifted 6 → 4 weeks in validation due to seasonality and assortment mix, but the zone remains unchanged
 
 ---
 
@@ -111,9 +111,9 @@ Key predictors: Weeks of Cover, lagged forecast shifts, and seasonal event flags
 
 ### Objective 4 — Inventory Optimization Simulation
 
-Three replenishment policies were simulated weekly across all Baseball SKUs using EOQ and Safety Stock formulas:
+Three replenishment policies were simulated weekly across all Baseball SKUs using EOQ and Safety Stock formulas.
 
-**Single ASIN example:**
+**Single ASIN example — policy comparison across 48 weeks:**
 
 ![Policy Single ASIN](Analysis_Visuals/Policy_Single_ASIN.png)
 
@@ -121,7 +121,7 @@ Three replenishment policies were simulated weekly across all Baseball SKUs usin
 
 ![Policy Multi ASIN](Analysis_Visuals/Policy_Multi_ASIN.png)
 
-**Aggregate policy comparison:**
+**Aggregate performance summary across all simulated SKUs:**
 
 ![Policy Summary](Analysis_Visuals/Policy_Summary.png)
 
@@ -142,6 +142,7 @@ Three replenishment policies were simulated weekly across all Baseball SKUs usin
 ## Exploratory Data Analysis
 
 ### Data Quality
+
 ![Missing Values](EDA_Visuals/Missing_Values.png)
 
 Forecast and inventory data exceeded 95% completeness. Lead time and PO fields showed moderate missingness in Q4 — addressed through imputation in the cleaning pipeline.
@@ -153,7 +154,7 @@ Forecast and inventory data exceeded 95% completeness. Lead time and PO fields s
   <img src="EDA_Visuals/Forecast_Distribution_Mean_vs_P90.png" width="48%"/>
 </p>
 
-On-hand inventory is highly right-skewed — ~80% of SKUs hold fewer than 500 units. P90 forecasts extend significantly beyond the mean, supporting conservative safety stock planning.
+On-hand inventory is highly right-skewed — ~80% of SKUs hold fewer than 500 units, signaling overstocking opportunity in slower-moving products. P90 forecasts extend significantly beyond the mean, supporting conservative safety stock planning.
 
 ### Weeks of Cover & Lead Time
 
@@ -172,6 +173,7 @@ Lead times cluster tightly around **21.3 days (≈ 3 weeks)** — confirming hig
 </p>
 
 ### Stockout Risk by Division
+
 ![Stockout Risk](EDA_Visuals/Stockout_Risk_by_Division.png)
 
 ~13% of Baseball division ASIN-weeks fall below the average lead time in Weeks of Cover — the exact exposure the reorder trigger model is designed to prevent.
@@ -181,14 +183,12 @@ Lead times cluster tightly around **21.3 days (≈ 3 weeks)** — confirming hig
 ## Technical Implementation
 
 **Languages & Libraries**
-
 - **Python** — pandas, numpy, scikit-learn, matplotlib, seaborn
 - **Machine Learning** — Linear Regression, Logistic Regression, Random Forest
 - **Statistical Methods** — Pearson correlation, precision-recall analysis, EOQ formula, safety stock modeling
 - **Feature Engineering** — Weeks of Cover, lagged forecasts, forecast change rates, seasonal event flags
 
 **Modeling Pipeline**
-
 ```
 Data Cleaning  →  Dataset Merging  →  EDA  →  Reorder Trigger & Forecast Lag  →  PO Forecasting  →  Inventory Simulation
 ```
