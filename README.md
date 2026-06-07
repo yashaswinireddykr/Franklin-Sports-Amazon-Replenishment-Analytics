@@ -45,26 +45,25 @@ Five datasets were cleaned, validated, and merged at the ASIN–week level, cove
 
 ### Objective 1 — Reorder Trigger (Weeks of Cover)
 
-Amazon reorders consistently when Weeks of Cover (WoC) falls between **4–8 weeks**, with peak probability at **≈ 6 WoC**. Nearly half of all Amazon purchase orders for Franklin products fall within this range. This reorder trigger aligns naturally with Franklin's ≈ 3-week inbound lead time, leaving a meaningful production buffer.
+Amazon reorders consistently when Weeks of Cover (WoC) falls between **4–8 weeks**, with peak probability at **≈ 6 WoC**. Nearly half of all Amazon purchase orders for Franklin products fall within this range, indicating a clear and consistent reorder trigger.
 
 ![WoC vs PO Probability](Analysis_Visuals/WoC_vs_PO_Probability.png)
 
 The finding holds consistently across training and validation periods — confirming it reflects a structural ordering rule, not a data artifact.
-
-| | Training | Validation |
-|---|---|---|
-| Peak WoC | ≈ 6 weeks | ≈ 4 weeks |
-| Reorder Zone | 4–8 WoC | 4–6 WoC |
-| Note | Baseline ordering pattern | Shift due to seasonality & assortment mix |
 
 <p align="center">
   <img src="Analysis_Visuals/WoC_Training.png" width="48%"/>
   <img src="Analysis_Visuals/WoC_Validation.png" width="48%"/>
 </p>
 
-Model precision was validated using a Precision–Recall–F1 sweep across WoC thresholds:
+Model precision was validated using a Precision–Recall–F1 sweep across WoC thresholds, confirming the trigger's predictive value:
 
 ![Precision Recall F1](Analysis_Visuals/Precision_Recall_F1.png)
+
+**What this means for Franklin:**
+- Amazon maintains a forward inventory buffer — when coverage approaches ~6 weeks, reordering becomes highly likely
+- This aligns naturally with Franklin's ~3-week inbound lead time, leaving a meaningful production buffer
+- The decision rule remains consistent: Amazon reorders when WoC is within 4–8 weeks
 
 ---
 
@@ -89,11 +88,16 @@ The surge-to-PO timing pattern holds consistently across both training and valid
 Forecast rises (+20% WoW)  →  ~4 weeks  →  Amazon places PO  →  ~3 weeks  →  Inventory arrives
 ```
 
+**What this means for Franklin:**
+- Forecast surges act as early warning signals — Franklin gains forward visibility into demand acceleration
+- Weeks of Cover confirms exact ordering readiness
+- Combined signals provide a reliable 6–7 week planning window
+
 ---
 
 ### Objective 3 — Weekly PO Forecasting
 
-Two models were trained to predict purchase order behavior:
+Two models were trained to predict purchase order behavior at the ASIN-week level:
 
 | Model | Task | Performance |
 |---|---|---|
@@ -101,13 +105,23 @@ Two models were trained to predict purchase order behavior:
 | Logistic Regression | PO occurrence (will Amazon order?) | High recall, interpretable |
 | Random Forest Classifier | PO occurrence | Precision ≈ 0.83 \| Recall ≈ 0.74 \| AUC ≈ 0.80 |
 
-Key predictors: Weeks of Cover, lagged forecast shifts, and seasonal event flags (Halloween, Thanksgiving, Cyber Monday, Christmas). The model produces a weekly ranked table of ASINs by PO probability and expected order quantity — a planner-ready view of upcoming replenishment demand.
+Key predictors: Weeks of Cover, lagged forecast shifts, and seasonal event flags (Halloween, Thanksgiving, Cyber Monday, Christmas). Seasonal spikes shift orders earlier, giving predictable lead indicators. The model produces a weekly ranked table of ASINs by PO probability and expected order quantity — a planner-ready view of upcoming replenishment demand.
 
 ---
 
 ### Objective 4 — Inventory Optimization Simulation
 
 Three replenishment policies were simulated weekly across all Baseball SKUs using EOQ and Safety Stock formulas:
+
+**Single ASIN example:**
+
+![Policy Single ASIN](Analysis_Visuals/Policy_Single_ASIN.png)
+
+**Results across multiple ASINs:**
+
+![Policy Multi ASIN](Analysis_Visuals/Policy_Multi_ASIN.png)
+
+**Aggregate policy comparison:**
 
 ![Policy Summary](Analysis_Visuals/Policy_Summary.png)
 
@@ -116,10 +130,6 @@ Three replenishment policies were simulated weekly across all Baseball SKUs usin
 | 4-WoC | 95.7% | 5,215 | $78,105 |
 | 6-WoC | 95.6% | 7,523 | $97,354 |
 | EOQ + Safety Stock | **98.0%** | 6,890 | $95,581 |
-
-Results per ASIN across multiple simulated periods:
-
-![Policy Multi ASIN](Analysis_Visuals/Policy_Multi_ASIN.png)
 
 **Findings:**
 - **4-WoC** — lowest cost but higher stockout risk for volatile SKUs
@@ -143,7 +153,7 @@ Forecast and inventory data exceeded 95% completeness. Lead time and PO fields s
   <img src="EDA_Visuals/Forecast_Distribution_Mean_vs_P90.png" width="48%"/>
 </p>
 
-On-hand inventory is highly right-skewed — ~80% of SKUs hold fewer than 500 units, signaling overstocking opportunity in slower-moving products. P90 forecasts extend significantly beyond the mean, supporting conservative safety stock planning.
+On-hand inventory is highly right-skewed — ~80% of SKUs hold fewer than 500 units. P90 forecasts extend significantly beyond the mean, supporting conservative safety stock planning.
 
 ### Weeks of Cover & Lead Time
 
