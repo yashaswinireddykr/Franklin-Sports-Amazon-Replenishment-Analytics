@@ -192,20 +192,20 @@ Each stage is modular and independently runnable from the `src/` directory.
 
 ## Business Recommendations
 
-1. **Monitor Weeks of Cover weekly** — flag SKUs approaching 6 WoC as high-priority for production scheduling
-2. **Track forecast surges as early demand signals** — a >20% WoW forecast increase typically precedes a PO by 4 weeks
-3. **Integrate weekly PO forecasts into production planning** — replace reactive scheduling with a forward-looking demand visibility window
-4. **Segment inventory policy by SKU demand variability** — apply 6-WoC for high-volume stable SKUs, EOQ+SS for volatile or high-value items
-5. **Use forecasts proactively** — the 6–7 week planning window gives Franklin time to align production ahead of Amazon's ordering cycle
+1. **Monitor Weeks of Cover weekly** - flag SKUs approaching 6 WoC as high-priority for production scheduling
+2. **Track forecast surges as early demand signals** - a >20% WoW forecast increase typically precedes a PO by 4 weeks
+3. **Integrate weekly PO forecasts into production planning** - replace reactive scheduling with a forward-looking demand visibility window
+4. **Segment inventory policy by SKU demand variability** - apply 6-WoC for high-volume stable SKUs, EOQ+SS for volatile or high-value items
+5. **Use forecasts proactively** - the 6-7 week planning window gives Franklin time to align production ahead of Amazon's ordering cycle
 
 ---
 
 ## Limitations
 
-- Analysis based on a 48-week historical window — multi-year seasonality cannot be fully verified
+- Analysis based on a 48-week historical window, multi-year seasonality cannot be fully verified
 - Many ASINs show intermittent demand, limiting predictive precision
 - Forecast changes may reflect internal Amazon logic not observable in the dataset
-- No consumer sell-through signal — analysis relies on Amazon forecasts without downstream demand validation
+- No consumer sell-through signal, analysis relies on Amazon forecasts without downstream demand validation
 
 ---
 
