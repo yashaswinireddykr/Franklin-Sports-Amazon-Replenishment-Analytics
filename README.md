@@ -1,4 +1,4 @@
-# Franklin Sports — Amazon Replenishment Analytics
+# Franklin Sports - Amazon Replenishment Analytics
 
 *A data-driven supply chain analytics project examining how inventory signals, demand forecasts, and lead times drive Amazon's purchase order behavior for Franklin Sports' Baseball division - enabling proactive replenishment planning instead of reactive response.*
 
