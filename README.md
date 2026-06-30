@@ -1,12 +1,12 @@
 # Franklin Sports — Amazon Replenishment Analytics
 
-*A data-driven supply chain analytics project examining how inventory signals, demand forecasts, and lead times drive Amazon's purchase order behavior for Franklin Sports' Baseball division — enabling proactive replenishment planning instead of reactive response.*
+*A data-driven supply chain analytics project examining how inventory signals, demand forecasts, and lead times drive Amazon's purchase order behavior for Franklin Sports' Baseball division - enabling proactive replenishment planning instead of reactive response.*
 
 ---
 
 ## Business Problem
 
-Franklin Sports supplies sporting goods to Amazon at scale. Amazon's ordering behavior is highly intermittent — weeks with no orders followed by sudden large replenishments — making it difficult for Franklin to plan production, position inventory, and balance stockout risk against holding cost.
+Franklin Sports supplies sporting goods to Amazon at scale. Amazon's ordering behavior is highly intermittent, weeks with no orders followed by sudden large replenishments - making it difficult for Franklin to plan production, position inventory, and balance stockout risk against holding cost.
 
 Although Franklin has access to Amazon's inventory levels, demand forecasts, and purchase order history, the drivers of ordering were not explicitly defined. The core question this project set out to answer:
 
@@ -43,7 +43,7 @@ Five datasets were cleaned, validated, and merged at the ASIN–week level, cove
 
 ## Key Findings
 
-### Objective 1 — Reorder Trigger (Weeks of Cover)
+### Objective 1 - Reorder Trigger (Weeks of Cover)
 
 Amazon reorders consistently when Weeks of Cover (WoC) falls between **4–8 weeks**, with peak probability at **≈ 6 WoC**. Nearly half of all Amazon purchase orders for Franklin products fall within this range. This aligns naturally with Franklin's ≈ 3-week inbound lead time, leaving a meaningful production buffer.
 
@@ -66,9 +66,9 @@ The finding holds across both training and validation periods — confirming a s
 
 ---
 
-### Objective 2 — Forecast Signal & Lag Analysis
+### Objective 2 - Forecast Signal & Lag Analysis
 
-Forecast surges (>20% week-over-week increase) precede purchase orders by approximately **4 weeks**. Near-term forecast levels confirm ordering ~1 week ahead. Combined, these signals create a **6–7 week forward planning window** for Franklin.
+Forecast surges (>20% week-over-week increase) precede purchase orders by approximately **4 weeks**. Near-term forecast levels confirm ordering ~1 week ahead. Combined, these signals create a **6-7 week forward planning window** for Franklin.
 
 | Forecast Lag Correlation | Forecast Change vs PO |
 |---|---|
@@ -86,13 +86,13 @@ Forecast rises (+20% WoW)  →  ~4 weeks  →  Amazon places PO  →  ~3 weeks  
 ```
 
 **What this means for Franklin:**
-- Forecast surges act as early warning signals — Franklin gains forward visibility into demand acceleration
+- Forecast surges act as early warning signals - Franklin gains forward visibility into demand acceleration
 - Weeks of Cover confirms exact ordering readiness
-- Combined signals provide a reliable 6–7 week planning window
+- Combined signals provide a reliable 6-7 week planning window
 
 ---
 
-### Objective 3 — Weekly PO Forecasting
+### Objective 3 - Weekly PO Forecasting
 
 Two models were trained to predict purchase order behavior at the ASIN-week level:
 
@@ -106,11 +106,11 @@ Key predictors: Weeks of Cover, lagged forecast shifts, and seasonal event flags
 
 ---
 
-### Objective 4 — Inventory Optimization Simulation
+### Objective 4 - Inventory Optimization Simulation
 
 Three replenishment policies were simulated weekly across all Baseball SKUs using EOQ and Safety Stock formulas.
 
-**Single ASIN example — policy comparison across 48 weeks:**
+**Single ASIN example - policy comparison across 48 weeks:**
 
 ![Policy Single ASIN](Analysis_Visuals/Policy_Single_ASIN.png)
 
@@ -142,7 +142,7 @@ Three replenishment policies were simulated weekly across all Baseball SKUs usin
 
 ![Missing Values](EDA_Visuals/Missing_Values.png)
 
-Forecast and inventory data exceeded 95% completeness. Lead time and PO fields showed moderate missingness in Q4 — addressed through imputation in the cleaning pipeline.
+Forecast and inventory data exceeded 95% completeness. Lead time and PO fields showed moderate missingness in Q4, addressed through imputation in the cleaning pipeline.
 
 ### Inventory & Forecast Distribution
 
@@ -221,4 +221,4 @@ Each stage is modular and independently runnable from the `src/` directory.
 
 ![Supply Chain](Analysis_Visuals/Supply_Chain_Closing.png)
 
-*This project moves Franklin Sports from reactive replenishment to data-driven planning — providing a 6–7 week forward visibility window, reducing stockout risk, and strengthening alignment with Amazon's purchasing behavior.*
+*This project moves Franklin Sports from reactive replenishment to data-driven planning, providing a 6-7 week forward visibility window, reducing stockout risk, and strengthening alignment with Amazon's purchasing behavior.*
